@@ -101,9 +101,10 @@ public class FordFulkerson {
                         //if a reverse "undo" edge was used in the path, we must decrease the flow at original edge.
                         decreaseFlowOfOriginalEdge(flowEdge, lastStart, bottleneck);
                     } else {
-
+                        //update capacity of the reverse "undo" edge e defined as c_r(e) = f(e)
                         boolean reverseEdgeExists = updateReverseEdges(flowEdge, lastStart, updatedFlow);
 
+                        //create the reverse edge if not exists
                         if (!reverseEdgeExists) {
                             addReverseEdge(flowEdge, lastStart, updatedFlow);
                         }
