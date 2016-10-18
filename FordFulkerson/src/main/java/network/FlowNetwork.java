@@ -15,7 +15,7 @@ public class FlowNetwork {
 
     @Getter
     @Setter
-    private int edgeCount;
+    private int vertexCount;
 
     public FlowNetwork() {
     }

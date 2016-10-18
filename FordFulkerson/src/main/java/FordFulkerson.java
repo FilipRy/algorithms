@@ -13,8 +13,18 @@ public class FordFulkerson {
 
     public FordFulkerson(FlowNetwork flowNetwork) {
         this.flowNetwork = flowNetwork;
+        visited = new boolean[flowNetwork.getVertexCount()];
     }
 
+
+    /**
+     * The Augmenting path is found using DFS.
+     * time complexity: O(m + n)
+     * space complexity: O(m)
+     * @param flowNode
+     * @param pathEdges
+     * @return
+     */
     public List<FlowEdge> findAugmentingPath(FlowNode flowNode, List<FlowEdge> pathEdges) {
         visited[flowNode.getId()] = true;
 
@@ -30,7 +40,12 @@ public class FordFulkerson {
 
                 if (!visited[edge.getTarget().getId()]) {
                     pathEdges.add(edge);
-                    return findAugmentingPath(edge.getTarget(), pathEdges);
+                    List<FlowEdge> foundPath = findAugmentingPath(edge.getTarget(), pathEdges);
+                    if(foundPath != null) {
+                        return foundPath;
+                    } else {
+                        pathEdges.remove(edge);
+                    }
                 }
             }
 
@@ -84,7 +99,7 @@ public class FordFulkerson {
 
         while (true) {
 
-            visited = new boolean[flowNetwork.getEdgeCount()];
+            visited = new boolean[flowNetwork.getVertexCount()];
 
             List<FlowEdge> path = findAugmentingPath(flowNetwork.getSource(), new ArrayList<FlowEdge>());
             if (path != null) {//if a path exists
@@ -104,7 +119,7 @@ public class FordFulkerson {
                         //update capacity of the reverse "undo" edge e defined as c_r(e) = f(e)
                         boolean reverseEdgeExists = updateReverseEdges(flowEdge, lastStart, updatedFlow);
 
-                        //create the reverse edge if not exists
+                        //create the reverse edge e if it not exists, set its capacity to f(e)
                         if (!reverseEdgeExists) {
                             addReverseEdge(flowEdge, lastStart, updatedFlow);
                         }
