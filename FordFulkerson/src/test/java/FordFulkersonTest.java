@@ -3,6 +3,7 @@ import network.FlowNetwork;
 import network.FlowNode;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,7 +140,89 @@ public class FordFulkersonTest {
     }
 
     @Test
-    public void test_fordFulkerson_shouldOK() {
+    public void test_findAugmentingPath_shouldNotFindPath() {
+
+        FlowNode source = new FlowNode(0);
+        FlowNode node2 = new FlowNode(1);
+        FlowNode node3 = new FlowNode(2);
+        FlowNode sink = new FlowNode(3);
+
+
+        /**
+         * edges from source node
+         */
+        FlowEdge edge_s2 = new FlowEdge(10, node2);
+        FlowEdge edge_s3 = new FlowEdge(10, node3);
+
+        source.getOutgoingEdges().add(edge_s3);
+        source.getOutgoingEdges().add(edge_s2);
+
+        /**
+         * edges from node 2
+         */
+        FlowEdge edge_2t = new FlowEdge(4, sink);
+        edge_2t.setFlow(4);
+        node2.getOutgoingEdges().add(edge_2t);
+
+        /**
+         * edges from node 3
+         */
+        FlowEdge edge_3t = new FlowEdge(9, sink);
+        edge_3t.setFlow(9);
+        node3.getOutgoingEdges().add(edge_3t);
+
+        FlowNetwork flowNetwork = new FlowNetwork();
+        flowNetwork.setSink(sink);
+        flowNetwork.setSource(source);
+        flowNetwork.setVertexCount(4);
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        List<FlowEdge> foundPath = fordFulkerson.findAugmentingPath(flowNetwork.getSource(), new ArrayList<>());
+
+        assertTrue(foundPath == null);
+
+    }
+
+    @Test
+    public void test_fordFulkerson_shouldReturnMaxFlow() {
+        FlowNetwork flowNetwork = new FlowNetwork();
+        try {
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("input_1.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        int maxFlow = fordFulkerson.run();
+
+        assertTrue(maxFlow == 38);
+
+
+    }
+
+
+    @Test
+    public void test_fordFulkerson_shouldReturnMaxFlow2() {
+        FlowNetwork flowNetwork = new FlowNetwork();
+        try {
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("input_2.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        int maxFlow = fordFulkerson.run();
+
+        assertTrue(maxFlow == 2);
+
+
+    }
+
+    @Test
+    public void test_fordFulkerson_shouldReturnMaxFlow3() {
 
         FlowNode source = new FlowNode(0);
         FlowNode node2 = new FlowNode(1);
@@ -199,7 +282,6 @@ public class FordFulkersonTest {
         assertTrue(maxFlow == 19);
 
     }
-
 
 
 
