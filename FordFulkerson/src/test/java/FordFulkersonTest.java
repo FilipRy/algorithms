@@ -188,7 +188,7 @@ public class FordFulkersonTest {
     public void test_fordFulkerson_shouldReturnMaxFlow() {
         FlowNetwork flowNetwork = new FlowNetwork();
         try {
-            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("input_1.txt");
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("src/test/input_1.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -207,7 +207,7 @@ public class FordFulkersonTest {
     public void test_fordFulkerson_shouldReturnMaxFlow2() {
         FlowNetwork flowNetwork = new FlowNetwork();
         try {
-            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("input_2.txt");
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("src/test/input_2.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -287,7 +287,7 @@ public class FordFulkersonTest {
     public void test_fordFulkerson_hasCirculation() {
         FlowNetwork flowNetwork = new FlowNetwork();
         try {
-            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("input_3.txt");
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("src/test/input_3.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -296,9 +296,24 @@ public class FordFulkersonTest {
 
         assertTrue(fordFulkerson.hasCirculation());
 
-
     }
 
+
+    @Test
+    public void test_fordFulkerson_hasCirculationWithBounds () {
+
+        FlowNetwork flowNetwork = new FlowNetwork();
+        try {
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("src/test/input_4.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        assertTrue(fordFulkerson.hasCirculationWithBounds());
+
+    }
 
 
 

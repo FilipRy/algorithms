@@ -98,7 +98,67 @@ public class FordFulkerson {
         target.getOutgoingEdges().add(residualEdge);
     }
 
-    private int prepareDemands() {
+    /**
+     * Eliminates the lower and upper bound of the edges and "converts" them to demands of the nodes and capacity of the edge.
+     * e.g.
+     * edge (v,w) has lower bound = 2, upper bound = 9
+     * this method increases the demand of v by 2 and decreases the demand of w by 2 and sets the capacity of edge (v, w) = 9 - 2 = 7
+     *
+     */
+    private void eliminateBounds() {
+
+        visited = new boolean[flowNetwork.getVertexCount()];
+
+        Queue<FlowNode> flowNodeQueue = new LinkedList<>();
+        flowNodeQueue.add(flowNetwork.getSource());
+        visited[flowNetwork.getSource().getId()] = true;
+
+        while (!flowNodeQueue.isEmpty()) {
+
+            FlowNode flowNode = flowNodeQueue.poll();
+
+            for (int i = 0; i < flowNode.getOutgoingEdges().size(); i++) {
+                FlowEdge edge = flowNode.getOutgoingEdges().get(i);
+
+                if(edge.getLowerBounds() > 0) {
+                    int lowerBounds = edge.getLowerBounds();
+                    int upperBounds = edge.getUpperBounds();
+
+                    edge.setUpperBounds(0);
+                    edge.setLowerBounds(0);
+
+                    if(upperBounds < lowerBounds) {
+                        throw new IllegalArgumentException("Upper bound of edge ("+ flowNode.getId() + ", " + edge.getTarget().getId() +") must be greater than lower bound");
+                    }
+
+                    edge.setCapacity(upperBounds - lowerBounds);
+
+                    int sourceDemand = flowNode.getDemand();
+                    int targetDemand = edge.getTarget().getDemand();
+
+                    edge.getTarget().setDemand(targetDemand - lowerBounds);
+                    flowNode.setDemand(sourceDemand + lowerBounds);
+
+                }
+
+                FlowNode target = edge.getTarget();
+
+                if (!visited[target.getId()]) {
+                    visited[target.getId()] = true;
+                    flowNodeQueue.add(target);
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * Removes demands/supplies (if any) of the nodes and creates new source and sink.
+     * Connects the nodes with supply to the new source and the nodes with demands to new sink.
+     * @return
+     */
+    private int eliminateDemands() {
 
         visited = new boolean[flowNetwork.getVertexCount()];
 
@@ -130,13 +190,14 @@ public class FordFulkerson {
                 FlowEdge edge = flowNode.getOutgoingEdges().get(i);
 
                 FlowNode target = edge.getTarget();
+                int targetId = target.getId();
 
-                if(target.getId() > visited.length) {//in case we want to visit newSource or newSink
+                if(targetId > visited.length) {//in case we want to visit newSource or newSink
                     continue;
                 }
 
-                if (!visited[target.getId()]) {
-                    visited[target.getId()] = true;
+                if (!visited[targetId]) {
+                    visited[targetId] = true;
                     flowNodeQueue.add(target);
                 }
 
@@ -153,6 +214,8 @@ public class FordFulkerson {
             throw new IllegalArgumentException("sum of all demands must be the same as sum of all supplies");
         }
 
+        System.out.println("Demand of the network = " + positiveDemand);
+
         return positiveDemand;
 
     }
@@ -160,7 +223,7 @@ public class FordFulkerson {
 
     public boolean hasCirculation() {
 
-        int demand = prepareDemands();
+        int demand = eliminateDemands();
 
         int maxFlow = computeMaxFlow();
 
@@ -168,8 +231,20 @@ public class FordFulkerson {
 
     }
 
+    public boolean hasCirculationWithBounds() {
+        eliminateBounds();
+
+        int demand = eliminateDemands();
+
+        int maxFlow = computeMaxFlow();
+
+        return maxFlow == demand;
+    }
+
 
     public int computeMaxFlow() {
+
+        System.out.println("Computing max flow of the network");
 
         while (true) {
 
@@ -212,6 +287,8 @@ public class FordFulkerson {
         for (FlowEdge flowEdge : flowNetwork.getSource().getOutgoingEdges()) {
             maxFlow = maxFlow + flowEdge.getFlow();
         }
+
+        System.out.println("Max flow of the network = " + maxFlow);
 
         return maxFlow;
 

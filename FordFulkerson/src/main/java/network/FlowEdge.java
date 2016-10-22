@@ -11,6 +11,14 @@ public class FlowEdge {
 
     @Getter
     @Setter
+    private int lowerBounds;
+
+    @Getter
+    @Setter
+    private int upperBounds;
+
+    @Getter
+    @Setter
     private int flow;
 
     @Getter
@@ -27,6 +35,12 @@ public class FlowEdge {
 
     public FlowEdge(int capacity, FlowNode target) {
         this.capacity = capacity;
+        this.target = target;
+    }
+
+    public FlowEdge(int lowerBounds, int upperBounds, FlowNode target) {
+        this.lowerBounds = lowerBounds;
+        this.upperBounds = upperBounds;
         this.target = target;
     }
 

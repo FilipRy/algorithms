@@ -19,9 +19,14 @@ public class FlowNetworkLoader {
      *                Structure of the input file is as follows:
      *                N ... # number of nodes of the network (including source and sink)
      *                next at most N lines are structured as follows:
-     *                1st number v in the row is the vertex id, 2nd number is the demand (supply) of the vertex, 3rd to i-th number represents the edges starting at v with their capacities
+     *                1st number v in the row is the vertex id,
+     *                2nd number is the demand (supply) of the vertex,
+     *                3rd to i-th number represents the edges starting at v with their lower and upper bounds
+     *
      *                Precondition vertex with id 0 is source, N-1 is sink
-     *                e.g. 0 0 1 17 2 12 3 11 - vertex 0 (source) has demand 0 and has is connected to vertices 1, 2, 3 through edges with capacities: 17, 12, 11 (respectively)
+     *                e.g. 0 0 1 0 17 2 0 12 3 0 11 -
+     *                  vertex 0 (source) has demand 0 and
+     *                  is connected to vertices 1, 2, 3 through edges with lower, upper bounds: 0,17; 0,12; 0,11 (respectively)
      *
      * @return
      * @throws IOException
@@ -50,11 +55,20 @@ public class FlowNetworkLoader {
 
                 start.setDemand(demand);
 
-                for (int i = 2; i < nodes.length - 1; i += 2) {
+                for (int i = 2; i < nodes.length - 1; i += 3) {
                     int targetNodeId = Integer.parseInt(nodes[i]);
-                    int edgeCapacity = Integer.parseInt(nodes[i + 1]);
+                    int lowerBound = Integer.parseInt(nodes[i + 1]);
+                    int upperBound = Integer.parseInt(nodes[i + 2]);
+
                     FlowNode targetNode = flowNodes.get(targetNodeId);
-                    FlowEdge flowEdge = new FlowEdge(edgeCapacity, targetNode);
+                    FlowEdge flowEdge;
+
+                    if(lowerBound == 0) {//lower bound = 0 -> capacity = upperBound
+                        flowEdge = new FlowEdge(upperBound, targetNode);
+                    } else {
+                        flowEdge = new FlowEdge(lowerBound, upperBound, targetNode);
+                    }
+
                     start.getOutgoingEdges().add(flowEdge);
                 }
             }
