@@ -15,6 +15,10 @@ public class FlowNode {
     @Setter
     private List<FlowEdge> outgoingEdges = new ArrayList<FlowEdge>();
 
+    @Getter
+    @Setter
+    private int demand;
+
     public FlowNode() {
     }
 

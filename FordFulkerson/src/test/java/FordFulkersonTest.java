@@ -195,7 +195,7 @@ public class FordFulkersonTest {
 
         FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
 
-        int maxFlow = fordFulkerson.run();
+        int maxFlow = fordFulkerson.computeMaxFlow();
 
         assertTrue(maxFlow == 38);
 
@@ -214,7 +214,7 @@ public class FordFulkersonTest {
 
         FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
 
-        int maxFlow = fordFulkerson.run();
+        int maxFlow = fordFulkerson.computeMaxFlow();
 
         assertTrue(maxFlow == 2);
 
@@ -277,11 +277,28 @@ public class FordFulkersonTest {
         flowNetwork.setVertexCount(6);
 
         FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
-        int maxFlow = fordFulkerson.run();
+        int maxFlow = fordFulkerson.computeMaxFlow();
 
         assertTrue(maxFlow == 19);
 
     }
+
+    @Test
+    public void test_fordFulkerson_hasCirculation() {
+        FlowNetwork flowNetwork = new FlowNetwork();
+        try {
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("input_3.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        assertTrue(fordFulkerson.hasCirculation());
+
+
+    }
+
 
 
 

@@ -3,7 +3,9 @@ import network.FlowNetwork;
 import network.FlowNode;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class FordFulkerson {
 
@@ -21,6 +23,7 @@ public class FordFulkerson {
      * The Augmenting path is found using DFS.
      * time complexity: O(m + n)
      * space complexity: O(m)
+     *
      * @param flowNode
      * @param pathEdges
      * @return
@@ -41,7 +44,7 @@ public class FordFulkerson {
                 if (!visited[edge.getTarget().getId()]) {
                     pathEdges.add(edge);
                     List<FlowEdge> foundPath = findAugmentingPath(edge.getTarget(), pathEdges);
-                    if(foundPath != null) {
+                    if (foundPath != null) {
                         return foundPath;
                     } else {
                         pathEdges.remove(edge);
@@ -95,7 +98,78 @@ public class FordFulkerson {
         target.getOutgoingEdges().add(residualEdge);
     }
 
-    public int run() {
+    private int prepareDemands() {
+
+        visited = new boolean[flowNetwork.getVertexCount()];
+
+        FlowNode newSource = new FlowNode(flowNetwork.getVertexCount());
+        FlowNode newSink = new FlowNode(flowNetwork.getVertexCount() + 1);
+
+        Queue<FlowNode> flowNodeQueue = new LinkedList<>();
+        flowNodeQueue.add(flowNetwork.getSource());
+        visited[flowNetwork.getSource().getId()] = true;
+
+        int positiveDemand = 0;
+        int negativeDemand = 0;
+
+        while (!flowNodeQueue.isEmpty()) {
+
+            FlowNode flowNode = flowNodeQueue.poll();
+
+            if(flowNode.getDemand() > 0) {
+                positiveDemand = positiveDemand + flowNode.getDemand();
+                FlowEdge edgeToSink = new FlowEdge(flowNode.getDemand(), newSink);
+                flowNode.getOutgoingEdges().add(edgeToSink);
+            } else if(flowNode.getDemand() < 0) {
+                negativeDemand = negativeDemand + flowNode.getDemand();
+                FlowEdge edgeFromSource = new FlowEdge(-flowNode.getDemand(), flowNode);
+                newSource.getOutgoingEdges().add(edgeFromSource);
+            }
+
+            for (int i = 0; i < flowNode.getOutgoingEdges().size(); i++) {
+                FlowEdge edge = flowNode.getOutgoingEdges().get(i);
+
+                FlowNode target = edge.getTarget();
+
+                if(target.getId() > visited.length) {//in case we want to visit newSource or newSink
+                    continue;
+                }
+
+                if (!visited[target.getId()]) {
+                    visited[target.getId()] = true;
+                    flowNodeQueue.add(target);
+                }
+
+            }
+
+        }
+
+
+        flowNetwork.setSource(newSource);
+        flowNetwork.setSink(newSink);
+        flowNetwork.setVertexCount(flowNetwork.getVertexCount() + 2);
+
+        if (positiveDemand != -negativeDemand) {
+            throw new IllegalArgumentException("sum of all demands must be the same as sum of all supplies");
+        }
+
+        return positiveDemand;
+
+    }
+
+
+    public boolean hasCirculation() {
+
+        int demand = prepareDemands();
+
+        int maxFlow = computeMaxFlow();
+
+        return maxFlow == demand;
+
+    }
+
+
+    public int computeMaxFlow() {
 
         while (true) {
 
@@ -135,7 +209,7 @@ public class FordFulkerson {
         }
 
         int maxFlow = 0;
-        for(FlowEdge flowEdge: flowNetwork.getSource().getOutgoingEdges()) {
+        for (FlowEdge flowEdge : flowNetwork.getSource().getOutgoingEdges()) {
             maxFlow = maxFlow + flowEdge.getFlow();
         }
 

@@ -13,6 +13,19 @@ import java.util.List;
  */
 public class FlowNetworkLoader {
 
+    /**
+     *
+     * @param filename:
+     *                Structure of the input file is as follows:
+     *                N ... # number of nodes of the network (including source and sink)
+     *                next at most N lines are structured as follows:
+     *                1st number v in the row is the vertex id, 2nd number is the demand (supply) of the vertex, 3rd to i-th number represents the edges starting at v with their capacities
+     *                Precondition vertex with id 0 is source, N-1 is sink
+     *                e.g. 0 0 1 17 2 12 3 11 - vertex 0 (source) has demand 0 and has is connected to vertices 1, 2, 3 through edges with capacities: 17, 12, 11 (respectively)
+     *
+     * @return
+     * @throws IOException
+     */
     public static FlowNetwork loadNetworkFromFile(String filename) throws IOException {
 
         FlowNetwork flowNetwork = new FlowNetwork();
@@ -33,7 +46,11 @@ public class FlowNetworkLoader {
                 int startNodeId = Integer.parseInt(nodes[0]);
                 FlowNode start = flowNodes.get(startNodeId);
 
-                for (int i = 1; i < nodes.length - 1; i += 2) {
+                int demand = Integer.parseInt(nodes[1]);
+
+                start.setDemand(demand);
+
+                for (int i = 2; i < nodes.length - 1; i += 2) {
                     int targetNodeId = Integer.parseInt(nodes[i]);
                     int edgeCapacity = Integer.parseInt(nodes[i + 1]);
                     FlowNode targetNode = flowNodes.get(targetNodeId);
