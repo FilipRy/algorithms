@@ -6,8 +6,9 @@ import network.FlowNode;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Created by Filip on 10/22/2016.
+ *
  */
 public class MatrixRounding {
 
@@ -68,6 +69,9 @@ public class MatrixRounding {
         Matrix roundedMatrix = new Matrix(roundedMatrixContent);
         roundedMatrix.setColumnSums(roundedColumnsSums);
         roundedMatrix.setRowSums(roundedRowsSums);
+
+        System.out.println("Matrix is rounded:");
+        System.out.println(roundedMatrix);
 
         return roundedMatrix;
     }

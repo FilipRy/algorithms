@@ -3,6 +3,9 @@ import network.FlowNetwork;
 import network.FlowNode;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.concurrent.ThreadLocalRandom;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -110,6 +113,38 @@ public class MatrixRoundingTest {
         testMatrixIsRounded(roundedMatrix);
 
     }
+
+//    @Test
+//    public void test_RandomMatrixRounding() {
+//        int rows = ThreadLocalRandom.current().nextInt(3, 11);
+//        int columns = ThreadLocalRandom.current().nextInt(3, 11);
+//
+//        float[][] content = new float[rows][columns];
+//
+//        for(int i = 0; i < content.length; i++) {
+//            for (int j = 0; j < content[i].length; j++) {
+//                float cell = ThreadLocalRandom.current().nextFloat() * 10;
+//                BigDecimal bd = new BigDecimal(Float.toString(cell));
+//                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+//
+//                content[i][j] = bd.floatValue();
+//            }
+//        }
+//
+//        Matrix matrix = new Matrix(content);
+//
+//
+//        MatrixRounding matrixRounding = new MatrixRounding(matrix);
+//
+//        FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
+//
+//        testConvertedFlowNetwork(matrixRounding, flowNetwork);
+//
+//        Matrix roundedMatrix = matrixRounding.roundMatrix();
+//
+//        testMatrixIsRounded(roundedMatrix);
+//
+//    }
 
 
     private void testMatrixIsRounded(Matrix matrix) {
