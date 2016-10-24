@@ -33,8 +33,9 @@ A flow network corresponding to the above matrix follows:
 By this approach the feasible matrix rounding can be computed in O(n.m) (n = #rows, m = #columns)
 
 ## Usage ##
-
+```
 java MatrixRounding matrixFile
+```
 
 The matrix file must have the following format:
 * 1st line contains two integers N M (rows count, columns count)
