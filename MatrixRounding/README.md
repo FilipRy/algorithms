@@ -28,6 +28,14 @@ We can formulate the problem of feasible matrix rounding as a circulation proble
 
 A flow network corresponding to the above matrix follows:
 
+<img src="https://github.com/FilipRy/algorithms/blob/master/MatrixRounding/flow_net.png?raw=true" alt="Corresponding flow network" width="400">
+
+By this approach the feasible matrix rounding can be computed in O(n.m) (n = #rows, m = #columns)
 
 ## Usage ##
 
+java MatrixRounding matrixFile
+
+The matrix file must have the following format:
+* 1st line contains two integers N M (rows count, columns count)
+* N lines follows: each containing M real numbers representing the cells of the matrix.
