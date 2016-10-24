@@ -12,6 +12,7 @@
     <modules>
         <module>FordFulkerson</module>
         <module>MatrixRounding</module>
+        <module>Dijkstra</module>
     </modules>
 
     <dependencies>
