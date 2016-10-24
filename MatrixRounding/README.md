@@ -40,7 +40,7 @@ The matrix file must have the following format:
 * 1st line contains two integers N M (rows count, columns count)
 * N lines follows: each containing M real numbers representing the cells of the matrix.
 
-e.g. the 3 lines below represt the matrix discussed above:
-2 2
-0.8 0.3
-5.3 4.3
+e.g. the 3 lines below represt the matrix discussed above:<br/>
+2 2<br/>
+0.8 0.3<br/>
+5.3 4.3<br/>
