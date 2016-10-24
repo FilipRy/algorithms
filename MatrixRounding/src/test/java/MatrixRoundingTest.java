@@ -3,6 +3,7 @@ import network.FlowNetwork;
 import network.FlowNode;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -73,7 +74,9 @@ public class MatrixRoundingTest {
 
         Matrix roundedMatrix = matrixRounding.roundMatrix();
 
-        testMatrixIsRounded(roundedMatrix);
+        testRoundedCells(roundedMatrix, matrixObj);
+        testMatrixRowsAndColumnsSums(roundedMatrix);
+
 
     }
 
@@ -110,50 +113,170 @@ public class MatrixRoundingTest {
 
         Matrix roundedMatrix = matrixRounding.roundMatrix();
 
-        testMatrixIsRounded(roundedMatrix);
+        testRoundedCells(roundedMatrix, matrixObj);
+        testMatrixRowsAndColumnsSums(roundedMatrix);
+
+    }
+
+    @Test
+    public void test_roundMatrix3_loadFromFile() {
+
+        Matrix matrix = null;
+        try {
+            matrix = MatrixLoader.loadMatrixFromFile("src/test/input_1.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MatrixRounding matrixRounding = new MatrixRounding(matrix);
+
+        FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
+
+        testConvertedFlowNetwork(matrixRounding, flowNetwork);
+
+        Matrix roundedMatrix = matrixRounding.roundMatrix();
+
+        testRoundedCells(roundedMatrix, matrix);
+        testMatrixRowsAndColumnsSums(roundedMatrix);
+
+    }
+
+    @Test
+    public void test_roundMatrix4_loadFromFile_integers() {
+
+        Matrix matrix = null;
+        try {
+            matrix = MatrixLoader.loadMatrixFromFile("src/test/input_2.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MatrixRounding matrixRounding = new MatrixRounding(matrix);
+
+        FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
+
+        testConvertedFlowNetwork(matrixRounding, flowNetwork);
+
+        Matrix roundedMatrix = matrixRounding.roundMatrix();
+
+        testRoundedCells(roundedMatrix, matrix);
+        testMatrixRowsAndColumnsSums(roundedMatrix);
+
+    }
+
+    @Test
+    public void test_roundMatrix5_loadFromFile() {
+
+        Matrix matrix = null;
+        try {
+            matrix = MatrixLoader.loadMatrixFromFile("src/test/input_3.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MatrixRounding matrixRounding = new MatrixRounding(matrix);
+
+        FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
+
+        testConvertedFlowNetwork(matrixRounding, flowNetwork);
+
+        Matrix roundedMatrix = matrixRounding.roundMatrix();
+
+        testRoundedCells(roundedMatrix, matrix);
+        testMatrixRowsAndColumnsSums(roundedMatrix);
+
+    }
+
+    @Test
+    public void test_roundMatrix6_loadFromFile() {
+
+        Matrix matrix = null;
+        try {
+            matrix = MatrixLoader.loadMatrixFromFile("src/test/input_4.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MatrixRounding matrixRounding = new MatrixRounding(matrix);
+
+        FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
+
+        testConvertedFlowNetwork(matrixRounding, flowNetwork);
+
+        Matrix roundedMatrix = matrixRounding.roundMatrix();
+
+        testRoundedCells(roundedMatrix, matrix);
+        testMatrixRowsAndColumnsSums(roundedMatrix);
 
     }
 
 //    @Test
 //    public void test_RandomMatrixRounding() {
-//        int rows = ThreadLocalRandom.current().nextInt(3, 11);
-//        int columns = ThreadLocalRandom.current().nextInt(3, 11);
 //
-//        float[][] content = new float[rows][columns];
+//        for(int c = 0; c < 5000; c++) {
 //
-//        for(int i = 0; i < content.length; i++) {
-//            for (int j = 0; j < content[i].length; j++) {
-//                float cell = ThreadLocalRandom.current().nextFloat() * 10;
-//                BigDecimal bd = new BigDecimal(Float.toString(cell));
-//                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 //
-//                content[i][j] = bd.floatValue();
+//            int rows = ThreadLocalRandom.current().nextInt(4, 5);
+//            int columns = ThreadLocalRandom.current().nextInt(3, 4);
+//
+//            float[][] content = new float[rows][columns];
+//
+//            for (int i = 0; i < content.length; i++) {
+//                for (int j = 0; j < content[i].length; j++) {
+//                    float cell = ThreadLocalRandom.current().nextFloat();
+//                    BigDecimal bd = new BigDecimal(Float.toString(cell));
+//                    bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+//
+//                    content[i][j] = bd.floatValue();
+//                }
 //            }
+//
+//            Matrix matrix = new Matrix(content);
+//
+//
+//            MatrixRounding matrixRounding = new MatrixRounding(matrix);
+//
+//            FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
+//
+//            testConvertedFlowNetwork(matrixRounding, flowNetwork);
+//
+//            Matrix roundedMatrix = matrixRounding.roundMatrix();
+//
+//            testRoundedCells(roundedMatrix, matrix);
+//            testMatrixRowsAndColumnsSums(roundedMatrix);
+//
 //        }
-//
-//        Matrix matrix = new Matrix(content);
-//
-//
-//        MatrixRounding matrixRounding = new MatrixRounding(matrix);
-//
-//        FlowNetwork flowNetwork = matrixRounding.convertToFlowNetwork();
-//
-//        testConvertedFlowNetwork(matrixRounding, flowNetwork);
-//
-//        Matrix roundedMatrix = matrixRounding.roundMatrix();
-//
-//        testMatrixIsRounded(roundedMatrix);
 //
 //    }
 
+    private void testRoundedCells(Matrix roundedMatrix, Matrix originalMatrix) {
 
-    private void testMatrixIsRounded(Matrix matrix) {
+        assertTrue(roundedMatrix.getContent().length == originalMatrix.getContent().length);
+        assertTrue(roundedMatrix.getContent()[0].length == originalMatrix.getContent()[0].length);
+
+        for (int i = 0; i < roundedMatrix.getContent().length; i++) {
+
+            for (int j = 0; j < roundedMatrix.getContent()[i].length; j++) {
+                assertTrue(Math.abs(roundedMatrix.getContent()[i][j] - originalMatrix.getContent()[i][j]) <= 1f);
+            }
+
+
+        }
+
+    }
+
+    private void testMatrixRowsAndColumnsSums(Matrix matrix) {
 
         for (int i = 0; i < matrix.getContent().length; i++) {
             float rowSum = 0;
             for (int j = 0; j < matrix.getContent()[i].length; j++) {
                 rowSum = rowSum + matrix.getContent()[i][j];
             }
+
+            if(rowSum != matrix.getRowSums()[i]) {
+                System.out.println("diff at row: " + i + "/" +matrix.getContent().length+ " row sum = " + rowSum + " vs "+matrix.getRowSums()[i]);
+            }
+
             assertTrue(rowSum == matrix.getRowSums()[i]);
         }
 
@@ -162,6 +285,7 @@ public class MatrixRoundingTest {
             for (int j = 0; j < matrix.getContent().length; j++) {
                 columnSum = columnSum + matrix.getContent()[j][i];
             }
+
             assertTrue(columnSum == matrix.getColumnSums()[i]);
         }
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Filip on 10/18/2016.
+ * Loads the flow network with demands and bounds (on the edges) from a file.
  */
 public class FlowNetworkLoader {
 

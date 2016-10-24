@@ -3,6 +3,7 @@ import network.FlowEdge;
 import network.FlowNetwork;
 import network.FlowNode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,10 @@ public class MatrixRounding {
 
     public Matrix roundMatrix() {
 
-        System.out.println("Rounding the matrix...");
+        System.out.println("Rounding the matrix: ");
+        System.out.println("-----------------------------");
+        System.out.println(matrix);
+        System.out.println("-----------------------------");
 
         FlowNetwork flowNetwork = convertToFlowNetwork();
 
@@ -71,14 +75,16 @@ public class MatrixRounding {
         roundedMatrix.setRowSums(roundedRowsSums);
 
         System.out.println("Matrix is rounded:");
+        System.out.println("-----------------------------");
         System.out.println(roundedMatrix);
+        System.out.println("-----------------------------");
 
         return roundedMatrix;
     }
 
 
     /**
-     * rounding the sums of rows
+     * rounding the sums of rows based on the flow of coresponding flow network
      */
     private float[] roundRowsSums(int rows) {
 
@@ -103,7 +109,7 @@ public class MatrixRounding {
     }
 
     /**
-     * rounding the sums of columns
+     * rounding the sums of columns based on the flow of coresponding flow network
      */
     private float[] roundColumnsSums(int columns) {
         float roundedColumnsSums[] = new float[columns];
@@ -131,7 +137,7 @@ public class MatrixRounding {
     }
 
     /**
-     * rounding the content of the matrix
+     * rounding the content of the matrix based on the flow of coresponding flow network
      */
     private float[][] roundMatrixContent(int rows, int columns) {
 
@@ -251,5 +257,26 @@ public class MatrixRounding {
 
         return flowNetwork;
     }
+
+
+
+    public static void main(String[] args) {
+
+        if(args.length != 1) {
+            System.out.println("USAGE: java MatrixRounding matrixFile");
+            System.out.println("matrixFile: contains the matrix, which should be rounded. For an exact format check README");
+            System.exit(1);
+        }
+
+        try {
+            Matrix matrix = MatrixLoader.loadMatrixFromFile(args[0]);
+            MatrixRounding matrixRounding = new MatrixRounding(matrix);
+            matrixRounding.roundMatrix();
+        } catch (IOException e) {
+            System.out.println("The file " + args[0] + " is not available!");
+        }
+
+    }
+
 
 }

@@ -316,5 +316,37 @@ public class FordFulkersonTest {
     }
 
 
+    @Test
+    public void test_fordFulkerson_hasCirculationWithBounds2 () {
+
+        FlowNetwork flowNetwork = new FlowNetwork();
+        try {
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("src/test/input_5.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        assertTrue(fordFulkerson.hasCirculationWithBounds());
+
+    }
+
+    @Test
+    public void test_fordFulkerson_hasCirculationWithBounds3 () {
+
+        FlowNetwork flowNetwork = new FlowNetwork();
+        try {
+            flowNetwork = FlowNetworkLoader.loadNetworkFromFile("src/test/input_6.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FordFulkerson fordFulkerson = new FordFulkerson(flowNetwork);
+
+        assertTrue(fordFulkerson.hasCirculationWithBounds());
+
+    }
+
 
 }

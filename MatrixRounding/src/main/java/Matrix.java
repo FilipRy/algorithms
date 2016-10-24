@@ -46,12 +46,14 @@ public class Matrix {
 
         int i = 0;
         for (float[] rows : content) {
+            str = str + " " + i + " row: ";
             for (float cell : rows) {
                 str = str + "| " + cell + " ";
             }
-            str = str + "| " + rowSums[i++] + '\n';
+            str = str + "| row sum = " + rowSums[i++] + '\n';
         }
 
+        str = str + "Column sums: " + '\n';
         for (float columnSum : columnSums) {
             str = str + "| " + columnSum;
         }

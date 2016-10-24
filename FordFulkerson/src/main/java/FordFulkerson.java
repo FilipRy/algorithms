@@ -120,7 +120,7 @@ public class FordFulkerson {
             for (int i = 0; i < flowNode.getOutgoingEdges().size(); i++) {
                 FlowEdge edge = flowNode.getOutgoingEdges().get(i);
 
-                if(edge.getLowerBounds() > 0) {
+                if(edge.getLowerBounds() > 0 || edge.getUpperBounds() > 0) {
                     int lowerBounds = edge.getLowerBounds();
                     int upperBounds = edge.getUpperBounds();
 
