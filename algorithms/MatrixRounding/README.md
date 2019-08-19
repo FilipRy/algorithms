@@ -28,7 +28,7 @@ We can formulate the problem of feasible matrix rounding as a circulation proble
 
 A flow network corresponding to the above matrix follows:
 
-<img src="https://github.com/FilipRy/algorithms/blob/master/MatrixRounding/flow_net.png?raw=true" alt="Corresponding flow network" width="400">
+![flow network of the matrix](https://github.com/FilipRy/algorithms/blob/master/algorithms/MatrixRounding/flow_net.png?raw=true)
 
 By this approach the feasible matrix rounding can be computed in O(n.m) (n = #rows, m = #columns)
 
